@@ -6,7 +6,7 @@ const cors = require('cors') ;
 const helmet = require('helmet') ;
 app.use(helmet()) ;//for security headers for all routes
 app.use(cors({
-    origin:"http://localhost:5173" ,//recieve requests only from this oringin
+    origin:"https://rayane-e-commerce-neon.vercel.app/" ,//recieve requests only from this oringin
     methods:["POST" , "GET" , "PUT" , "DELETE"],
     credentials:true,//without it browser cannot send cookies
     allowedHeaders:["Content-Type" , "x-csrf-token"]//accept requests that have these headers only
@@ -15,7 +15,7 @@ app.use(cors({
 //CSP : it will be applied to all routes
 app.use(
     (req , res , next) => {
-        res.setHeader("Content-Security-Policy" , "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' http://localhost:5173; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; report-uri /csp-report");
+        res.setHeader("Content-Security-Policy" , "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://rayane-e-commerce-neon.vercel.app; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; report-uri /csp-report");
         next();
     }
 )
