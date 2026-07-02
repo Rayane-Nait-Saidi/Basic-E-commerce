@@ -1,0 +1,116 @@
+{
+    name:"Galaxy A15 phone",
+    description:" A reliable everyday smartphone featuring a vibrant 6.5" Super AMOLED display, a versatile 50MP triple camera system, and a long-lasting 5000mAh battery. Powered by smooth performance and expandable storage, it's built for casual users who want great value without compromise.",
+    price:30000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901587/galaxy_a15_jmbh4k.webp"
+    category:"electronics",
+    stock:10
+}
+
+{
+    name:"Iphone 17 phone",
+    description:"Apple's most affordable flagship, featuring a 6.3" Super Retina XDR display with 120Hz ProMotion and Always-On, powered by the A19 chip. It sports a dual 48MP camera system, an upgraded Center Stage front camera, and Ceramic Shield 2 protection.",
+    price:70000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901567/iphone-17-white-0-46c7c2f_fpvfvk.jpg",
+    category:"electronics",
+    stock:7
+}
+
+{
+    name:"Lenovo ThinkPad T14 Laptop",
+    description:" A durable, business-class 14" laptop built for reliability and repairability, featuring the latest Intel "Panther Lake" or AMD "Gorgon Point" processors and a roomy 75Wh tool-less removable battery. With MIL-SPEC durability testing, ThinkShield security, and a rich port selection (Thunderbolt 4, USB-A, HDMI, Ethernet), it's a workhorse designed for professionals on the go.",
+    price:64000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901566/lenovo_thinkpad_t14_qw5uzn.webp",
+    category:"electronics",
+    stock:8
+}
+
+{
+    name:"Zara Slim Fit Chinos clothes",
+    description:"Sleek, tailored trousers crafted from stretch cotton fabric for a modern, streamlined silhouette. Versatile enough for both office and casual wear."
+    price:3500 ,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901715/Zara_Slim_Fit_Chinos_ggywry.webp",
+    category:"fashion",
+    stock:15
+}
+
+{
+    name:"Tommy Hilfiger Polo Shirt clothes",
+    description:"A classic, preppy polo made from breathable cotton piqué, featuring the iconic embroidered flag logo. Timeless style with a comfortable, regular fit.",
+    price:2500,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901714/Tommy_Hilfiger_Polo_Shirt_motqxj.webp",
+    category:"fashion",
+    stock:0
+}
+
+{
+    name:"Nike Air Force 1 Sneakers clothes",
+    description:"An iconic basketball-inspired sneaker with a crisp leather upper and Nike Air cushioning for all-day comfort. A street-style staple that never goes out of fashion.",
+    price:5000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901699/Nike_Air_Force_1_Sneakers_wvtr3k.webp",
+    category:"fashion",
+    stock:6
+}
+
+{
+    name:"Levi's 501 Original Jeans clothes",
+    description:"The original straight-leg denim jean, crafted from durable, button-fly cotton fabric. A wardrobe essential with authentic, timeless style."
+    price:4100,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901678/Levi_s_501_Original_Jeans_nuc5wg.webp",
+    category:"fashion",
+    stock:4
+}
+
+{
+    name:"Adidas Hoodie Trefoil clothes",
+    description:" A cozy, relaxed-fit hoodie in soft cotton fleece, featuring the classic Adidas Trefoil logo. Perfect for everyday comfort with an athletic-heritage look."
+    price:6000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901653/Adidas_Hoodie_Trefoil_fucvgv.webp",
+    category:"fashion",
+    stock:9
+}
+
+{
+    name:"The Legend of Zelda: Tears of the Kingdom game",
+    description:"An epic open-world adventure where Link explores the vast skies and depths of Hyrule using new building and fusion abilities. A masterful blend of creativity, exploration, and puzzle-solving.",
+    price:9000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901847/The_Legend_of_Zelda_Tears_of_the_Kingdom_tnyaj8.webp",
+    category:"gaming",
+    stock:3
+}
+
+{
+    name:"Red Dead Redemption 2 game",
+    description:"A sprawling, cinematic Wild West epic following outlaw Arthur Morgan through a richly detailed open world. Renowned for its immersive storytelling and stunning attention to detail.",
+    price:8500,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901846/Red_Dead_Redemption_2_y3dzm8.webp"
+    category:"gaming",
+    stock:7
+}
+
+{
+    name:"God of War Ragnarök game",
+    description:"Kratos and Atreus journey through the Nine Realms as Ragnarök approaches in this action-packed mythological saga. A gripping story paired with intense, visceral combat."
+    price:10000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901797/God_of_War_Ragnar%C3%B6k_erw0rq.webp",
+    category:"gaming",
+    stock:4
+}
+
+{
+    name:"FIFA 25 game",
+    description:" The latest installment in the world's most popular football simulation, featuring realistic gameplay, licensed teams, and updated rosters. Immersive career and Ultimate Team modes for football fans everywhere."
+    price:15000,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901751/FIFA_25_tcao68.webp",
+    category:"gaming",
+    stock:6
+}
+
+{
+    name:"Elden Ring game",
+    description:" A dark fantasy open-world epic co-created with George R.R. Martin, blending challenging combat with deep exploration. A genre-defining masterpiece from FromSoftware.",
+    price:9500,
+    image:"https://res.cloudinary.com/dh3hqvwg8/image/upload/v1782901750/Elden_Ring_vd6vld.webp",
+    category:"gaming",
+    stock:0
+}
