@@ -38,12 +38,19 @@ const checkCsrfToken = (req , res , next) => {
 }
 
 //rate limiting middleware
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
-  message: { error: "Too many requests, try again later." }
-});//it means that a user can make only 10 requests in 15 minutes to the auth routes
+const createAuthLimiter = (windowMs, max) => rateLimit({
+    windowMs,
+    max,
+    message: { error: "Too many requests, try again later." }
+});
 
+// General auth flows with a slightly higher ceiling for normal testing.
+const authLimiter1 = createAuthLimiter(15 * 60 * 1000, 20); // 15 minutes, 20 requests
 
+// Login / reset flows: still protected, but more forgiving while the user retries.
+const authLimiter2 = createAuthLimiter(10 * 60 * 1000, 25); // 10 minutes, 25 requests
 
-module.exports = {protect , authorize , checkCsrfToken , authLimiter} ;
+// Search / order actions: keep these responsive during repeated dashboard usage.
+const authLimiter3 = createAuthLimiter(1 * 60 * 1000, 60); // 1 minute, 60 requests
+
+module.exports = {protect , authorize , checkCsrfToken , authLimiter1 , authLimiter2 , authLimiter3} ;

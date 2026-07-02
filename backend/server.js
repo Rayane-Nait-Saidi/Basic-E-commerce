@@ -29,11 +29,14 @@ const jwt = require('jsonwebtoken') ;
 const token = require('./schemas/token');
 const crypto = require('crypto') ;
 const bcrypt = require('bcrypt') ;
+const users = require('./schemas/user') ;
 const {protect} = require('./middlewares') ;
+const dns = require('dns') ;
+dns.setServers(['1.1.1.1', '1.0.0.1']);
 
 async function run(){
     try{
-        await mongoose.connect("mongodb://127.0.0.1:27017/codealpha1");
+        await mongoose.connect(process.env.MONGO_URI);
         console.log("db connected✅");
         app.get('/' , (req,res) => {
             res.send("welcome to small E-commerce!");
@@ -43,6 +46,13 @@ async function run(){
         app.get('/switchaccount' , protect , async(req,res) => {
             try{
                 //the protect middleware will do all the job for us , it will check the access token and set the req.user object
+                //we can also check if this user still exist in the db 
+                //bacause in dev , I can delete the user from the db but the tokens are still valid in the cookies 
+                const userId = req.user.id ;
+                const user = await users.findById(userId) ;
+                if (!user){
+                    return res.status(401).json({error:"unauthorized!"}) ;
+                }
                 res.json({succ:"successful!" , id:req.user.id}) ;
             }catch(e){
                 res.status(401).json({error:"unauthorized!"}) ;

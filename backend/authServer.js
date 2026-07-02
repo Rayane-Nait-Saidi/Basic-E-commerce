@@ -11,7 +11,7 @@ const nodemailer = require('nodemailer') ;
 const axios = require('axios') ;
 const crypto = require('crypto') ;
 const sanitizehtml = require('sanitize-html') ;
-const {authLimiter} = require('./middlewares') ; //import the rate limiting middleware
+const {authLimiter1 , authLimiter2} = require('./middlewares') ; //import the rate limiting middleware
 
 
 async function sendEmail({ to, subject, html }) {
@@ -81,7 +81,7 @@ function generateCode() {
   return Math.floor(100000 + Math.random() * 900000);
 }
 
-router.post('/register' , authLimiter , 
+router.post('/register' , authLimiter1 , 
 body("username").trim().isString().isLength({min:3 , max:30}),
 body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}),
 body("password").trim().isString().isLength({min:8 , max:16}) ,
@@ -137,7 +137,7 @@ async(req , res) => {
 )
 
 
-router.put('/resend' , authLimiter, body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}), async(req , res) => {
+router.put('/resend' , authLimiter1, body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}), async(req , res) => {
   const errors = validationResult(req) ;
   if (!errors.isEmpty()){
       return res.status(400).json({error:errors.array()})
@@ -177,7 +177,7 @@ router.put('/resend' , authLimiter, body("email").trim().isString().normalizeEma
   }
 })
 
-router.post('/verifycode' , authLimiter , body("code").isNumeric().isLength({min:6, max:6}) , body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
+router.post('/verifycode' , authLimiter1 , body("code").isNumeric().isLength({min:6, max:6}) , body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
     const errors = validationResult(req) ;
     if (!errors.isEmpty()){
         return res.status(400).json({error:errors.array()})
@@ -222,7 +222,7 @@ router.post('/verifycode' , authLimiter , body("code").isNumeric().isLength({min
 
 
 //login route 
-router.post('/login' , authLimiter ,
+router.post('/login' , authLimiter2 ,
 body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) ,
 body("password").trim().isString().isLength({min:8, max:16})  
 , async(req , res) => {
@@ -256,7 +256,7 @@ body("password").trim().isString().isLength({min:8, max:16})
    }
 }) ;
 
-router.post('/forgetpassword' , authLimiter ,
+router.post('/forgetpassword' , authLimiter2 ,
 body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) ,
 async(req , res) => {
   const errors = validationResult(req) ;
@@ -295,7 +295,7 @@ async(req , res) => {
   }
 })
 
-router.put("/resetcode" , authLimiter, body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
+router.put("/resetcode" , authLimiter2, body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
   //regenerate a new code and send it to the user and store it in the cookie again for 10 minutes
   try{
     let {email} = req.body ;
@@ -325,7 +325,7 @@ router.put("/resetcode" , authLimiter, body("email").trim().isString().normalize
   }
 });
 
-router.post("/checkcode" , authLimiter , body("code").isNumeric().isLength({min:6, max:6}) , body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
+router.post("/checkcode" , authLimiter2 , body("code").isNumeric().isLength({min:6, max:6}) , body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) , async(req , res) => {
   try{
     let {email, code} = req.body ;
     email = sanitizehtml(email) ;
@@ -347,7 +347,7 @@ router.post("/checkcode" , authLimiter , body("code").isNumeric().isLength({min:
   }
 })
 
-router.post("/resetpassword" , authLimiter ,
+router.post("/resetpassword" , authLimiter2 ,
   body("email").trim().isString().normalizeEmail().isLength({min:0 , max:60}) ,
   body("password").trim().isString().isLength({min:8 , max:16}) ,
   body("confirm").trim().isString().isLength({min:8 , max:16})  

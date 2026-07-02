@@ -4,11 +4,11 @@ const router = express.Router();
 const { body , validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken') ;
 const products = require('./schemas/product') ;
-const {protect , authorize , authLimiter , checkCsrfToken} = require('./middlewares') ;
+const {protect , authorize , authLimiter3 , checkCsrfToken} = require('./middlewares') ;
 const users = require('./schemas/user') ;
 const orders = require('./schemas/order') ;
 
-router.get('/profile' , authLimiter , protect ,authorize('user'),async(req , res) => {
+router.get('/profile' , protect ,authorize('user'),async(req , res) => {
     try{
         const userId = req.user.id ;
         const user = await users.findById(userId).select('-password') ;
@@ -57,7 +57,7 @@ router.post("/search",
   }
 );
 
-router.post('/order' , authLimiter , body("quantity").isNumeric().isInt({ min: 1 }), protect , authorize('user') , checkCsrfToken , async(req , res) => {
+router.post('/order' , authLimiter3 , body("quantity").isNumeric().isInt({ min: 1 }), protect , authorize('user') , checkCsrfToken , async(req , res) => {
    const errors = validationResult(req) ;
     if(!errors.isEmpty()){
         return res.status(400).json({error:errors.array()}) ;
@@ -95,7 +95,7 @@ router.get('/orders' , protect , authorize('user') , async(req , res) => {
     }
 });
 
-router.delete('/deleteorder' , authLimiter , protect , authorize('user') , checkCsrfToken , async(req , res) => {
+router.delete('/deleteorder' , authLimiter3 , protect , authorize('user') , checkCsrfToken , async(req , res) => {
     try{
         const { orderId } = req.body ;
         const order = await orders.findById(orderId) ;
