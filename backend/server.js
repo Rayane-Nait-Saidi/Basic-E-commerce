@@ -36,7 +36,7 @@ dns.setServers(['1.1.1.1', '1.0.0.1']);
 
 const cookieOptions = {
     secure: true,
-    sameSite: 'none'
+    sameSite: 'strict'
 };
 
 const httpOnlyCookieOptions = {

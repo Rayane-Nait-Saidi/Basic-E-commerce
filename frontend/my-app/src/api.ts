@@ -1,1 +1,1 @@
-export const BASE_URL = "https://rayane-e-commerce.onrender.com" ;
+export const BASE_URL = "/api" ;

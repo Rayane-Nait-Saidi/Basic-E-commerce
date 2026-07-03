@@ -15,7 +15,7 @@ const {authLimiter1 , authLimiter2} = require('./middlewares') ; //import the ra
 
 const cookieOptions = {
   secure: true,
-  sameSite: 'none'
+  sameSite: 'strict'
 };
 
 const httpOnlyCookieOptions = {
@@ -23,10 +23,13 @@ const httpOnlyCookieOptions = {
   httpOnly: true
 };
 
+
+
 const csrfCookieOptions = {
   ...cookieOptions,
   httpOnly: false
 };
+
 
 
 async function sendEmail({ to, subject, html }) {
@@ -227,8 +230,8 @@ router.post('/verifycode' , authLimiter1 , body("code").isNumeric().isLength({mi
         res.cookie("refreshToken" , refreshToken , {...httpOnlyCookieOptions , maxAge:7*24*60*60*1000}) ;
         //for csrf tokens 
         const scrfToken = crypto.randomBytes(32).toString('hex') ; 
-        res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
-        res.json({succ:"account created!" , id:a._id}) ;
+        //res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
+        res.json({succ:"account created!" , id:a._id , csrfToken:scrfToken}) ;
     }catch(e){
       res.json({error:"invalid credentials"}) ;
       console.log(e) ;
@@ -263,8 +266,8 @@ body("password").trim().isString().isLength({min:8, max:16})
       await token.create({userId:u._id , tokenhash:hashedRefreshToken , expiresAt: new Date(Date.now() + 7*24*60*60*1000)}) ;
       res.cookie("refreshToken" , refreshToken , {...httpOnlyCookieOptions , maxAge:7*24*60*60*1000}) ;
       const scrfToken = crypto.randomBytes(32).toString('hex') ;
-      res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
-      res.json({succ:"login successful!" , id:u._id , role:u.role}) ;
+      //res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
+      res.json({succ:"login successful!" , id:u._id , role:u.role , csrfToken:scrfToken}) ;
    }catch(e){
       res.json({error:"invalid credentials"}) ;
       console.log(e) ;
