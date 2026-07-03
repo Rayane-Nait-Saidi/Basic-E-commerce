@@ -15,7 +15,7 @@ const {authLimiter1 , authLimiter2} = require('./middlewares') ; //import the ra
 
 const cookieOptions = {
   secure: true,
-  sameSite: 'none'
+  sameSite: 'strict'
 };
 
 const httpOnlyCookieOptions = {
