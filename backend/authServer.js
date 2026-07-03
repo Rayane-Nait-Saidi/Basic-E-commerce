@@ -13,6 +13,21 @@ const crypto = require('crypto') ;
 const sanitizehtml = require('sanitize-html') ;
 const {authLimiter1 , authLimiter2} = require('./middlewares') ; //import the rate limiting middleware
 
+const cookieOptions = {
+  secure: true,
+  sameSite: 'none'
+};
+
+const httpOnlyCookieOptions = {
+  ...cookieOptions,
+  httpOnly: true
+};
+
+const csrfCookieOptions = {
+  ...cookieOptions,
+  httpOnly: false
+};
+
 
 async function sendEmail({ to, subject, html }) {
   await axios.post('https://api.brevo.com/v3/smtp/email', {
@@ -205,14 +220,14 @@ router.post('/verifycode' , authLimiter1 , body("code").isNumeric().isLength({mi
         await m.deleteOne() ;
         //now for tokens and cookies management
         const accessToken = jwt.sign({userId:a._id , role:a.role} , process.env.JWT_SECRET , {expiresIn:"1h"}) ;
-        res.cookie("accessToken" , accessToken , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:3600000}) ; //1 hour
+        res.cookie("accessToken" , accessToken , {...httpOnlyCookieOptions , maxAge:3600000}) ; //1 hour
         const refreshToken = jwt.sign({userId:a._id , role:a.role} , process.env.REFRESH_SECRET , {expiresIn:"7d"}) ;
         const hashedRefreshToken = await bcrypt.hash(refreshToken , 14) ;
         await token.create({userId:a._id , tokenhash:hashedRefreshToken , expiresAt: new Date(Date.now() + 7*24*60*60*1000)}) ; //7 days
-        res.cookie("refreshToken" , refreshToken , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:7*24*60*60*1000}) ;
+        res.cookie("refreshToken" , refreshToken , {...httpOnlyCookieOptions , maxAge:7*24*60*60*1000}) ;
         //for csrf tokens 
         const scrfToken = crypto.randomBytes(32).toString('hex') ; 
-        res.cookie("csrfToken" , scrfToken , {httpOnly:false , secure:false , sameSite:"strict" , maxAge:7*24*60*60*1000}) ;
+        res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
         res.json({succ:"account created!" , id:a._id}) ;
     }catch(e){
       res.json({error:"invalid credentials"}) ;
@@ -242,13 +257,13 @@ body("password").trim().isString().isLength({min:8, max:16})
       }
       //now for tokens and cookies management
       const accessToken = jwt.sign({userId:u._id , role:u.role} , process.env.JWT_SECRET , {expiresIn:"1h"}) ;
-      res.cookie("accessToken" , accessToken , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:3600000}) ; //1 hour
+      res.cookie("accessToken" , accessToken , {...httpOnlyCookieOptions , maxAge:3600000}) ; //1 hour
       const refreshToken = jwt.sign({userId:u._id , role:u.role} , process.env.REFRESH_SECRET , {expiresIn:"7d"}) ;
       const hashedRefreshToken = await bcrypt.hash(refreshToken , 14) ;
       await token.create({userId:u._id , tokenhash:hashedRefreshToken , expiresAt: new Date(Date.now() + 7*24*60*60*1000)}) ;
-      res.cookie("refreshToken" , refreshToken , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:7*24*60*60*1000}) ;
+      res.cookie("refreshToken" , refreshToken , {...httpOnlyCookieOptions , maxAge:7*24*60*60*1000}) ;
       const scrfToken = crypto.randomBytes(32).toString('hex') ;
-      res.cookie("csrfToken" , scrfToken , {httpOnly:false , secure:false , sameSite:"strict" , maxAge:7*24*60*60*1000}) ;
+      res.cookie("csrfToken" , scrfToken , {...csrfCookieOptions , maxAge:7*24*60*60*1000}) ;
       res.json({succ:"login successful!" , id:u._id , role:u.role}) ;
    }catch(e){
       res.json({error:"invalid credentials"}) ;
@@ -287,7 +302,7 @@ async(req , res) => {
     });
     
     //store the code in httpOnly cookie for 10 minutes
-    res.cookie("resetCode" , code , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:10*60*1000}) ;//10 minutes
+    res.cookie("resetCode" , code , {...httpOnlyCookieOptions , maxAge:10*60*1000}) ;//10 minutes
     res.json({succ:"email sent!" , id:u._id}) ;
   }catch(e){
     res.json({error:"invalid credentials"}) ;
@@ -316,7 +331,7 @@ router.put("/resetcode" , authLimiter2, body("email").trim().isString().normaliz
       subject: "Password Reset Code",
       html: buildNotificationHtml({ recipientName: `${u.username}`, mainHtml })
     });
-    res.cookie("resetCode" , code , {httpOnly:true , secure:false , sameSite:"strict" , maxAge:10*60*1000}) ;//10 minutes
+    res.cookie("resetCode" , code , {...httpOnlyCookieOptions , maxAge:10*60*1000}) ;//10 minutes
     res.json({succ:"email sent!"}) ;
 
   }catch(e){

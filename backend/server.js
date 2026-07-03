@@ -6,7 +6,7 @@ const cors = require('cors') ;
 const helmet = require('helmet') ;
 app.use(helmet()) ;//for security headers for all routes
 app.use(cors({
-    origin:"https://rayane-e-commerce-neon.vercel.app/" ,//recieve requests only from this oringin
+    origin:"http://localhost:5173" ,//recieve requests only from this oringin
     methods:["POST" , "GET" , "PUT" , "DELETE"],
     credentials:true,//without it browser cannot send cookies
     allowedHeaders:["Content-Type" , "x-csrf-token"]//accept requests that have these headers only
@@ -15,7 +15,7 @@ app.use(cors({
 //CSP : it will be applied to all routes
 app.use(
     (req , res , next) => {
-        res.setHeader("Content-Security-Policy" , "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://rayane-e-commerce-neon.vercel.app; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; report-uri /csp-report");
+        res.setHeader("Content-Security-Policy" , "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' http://localhost:5173; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; report-uri /csp-report");
         next();
     }
 )
@@ -33,6 +33,21 @@ const users = require('./schemas/user') ;
 const {protect} = require('./middlewares') ;
 const dns = require('dns') ;
 dns.setServers(['1.1.1.1', '1.0.0.1']);
+
+const cookieOptions = {
+    secure: true,
+    sameSite: 'none'
+};
+
+const httpOnlyCookieOptions = {
+    ...cookieOptions,
+    httpOnly: true
+};
+
+const csrfCookieOptions = {
+    ...cookieOptions,
+    httpOnly: false
+};
 
 async function run(){
     try{
@@ -98,9 +113,9 @@ async function run(){
             expiresAt: new Date(Date.now() + 7*24*60*60*1000)
         });
 
-        res.cookie("refreshToken", newRefreshToken, {httpOnly:true, secure:false, sameSite:"strict", maxAge:7*24*60*60*1000});
-        res.cookie("csrfToken", csrfToken, {httpOnly:false, secure:false, sameSite:"strict", maxAge:7*24*60*60*1000});
-        res.cookie("accessToken", accessToken, {httpOnly:true, secure:false, sameSite:"strict", maxAge:60*60*1000});
+        res.cookie("refreshToken", newRefreshToken, {...httpOnlyCookieOptions, maxAge:7*24*60*60*1000});
+        res.cookie("csrfToken", csrfToken, {...csrfCookieOptions, maxAge:7*24*60*60*1000});
+        res.cookie("accessToken", accessToken, {...httpOnlyCookieOptions, maxAge:60*60*1000});
 
         res.json({succ:"token refreshed!"});
     }catch(e){
@@ -113,9 +128,9 @@ app.post('/logout' , protect , async(req,res) => {
     try{
         const userId = req.user.id ;
         await token.deleteMany({userId:userId}) ;
-        res.clearCookie("refreshToken") ;
-        res.clearCookie("csrfToken") ;
-        res.clearCookie("accessToken") ;
+        res.clearCookie("refreshToken", cookieOptions) ;
+        res.clearCookie("csrfToken", cookieOptions) ;
+        res.clearCookie("accessToken", cookieOptions) ;
         res.json({succ:"logged out successfully!"}) ;
     }catch(e){
         console.error(e) ;
